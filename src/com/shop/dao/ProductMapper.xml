@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shop.dao.ProductMapper">
+  <resultMap id="BaseResultMap" type="com.shop.entity.Product">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="productName" jdbcType="VARCHAR" property="productName" />
+    <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="brandID" jdbcType="INTEGER" property="brandID" />
+    <result column="state" jdbcType="BIT" property="state" />
+    <result column="produceTime" jdbcType="TIMESTAMP" property="produceTime" />
+    <result column="productImg" jdbcType="VARCHAR" property="productImg" />
+    <result column="natural" jdbcType="VARCHAR" property="natural" />
+    <association property="brand" javaType="com.shop.entity.Brand">
+      <id column="brID" property="brandID"/>
+      <result column="brandName" property="brandName"/>
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, productName, price, brandID, state, produceTime, productImg, `natural`
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from product
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="getToballist" resultType="int">
+     SELECT COUNT(1) FROM product
+  </select>
+  
+  <select id="productList" resultMap="BaseResultMap"> 
+     SELECT 
+	   p.*,b.brandName,b.brandID AS brID
+	 FROM product p LEFT JOIN brand b ON p.brandID = b.brandID 
+     LIMIT #{stratIndex},#{pageSize}
+  </select>
+  
+  <select id="getProductList" resultMap="BaseResultMap">
+    SELECT 
+	 p.*,b.brandName,b.brandID AS brID
+	FROM product p LEFT JOIN brand b ON p.brandID = b.brandID;
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from product
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.shop.entity.Product">
+    insert into product (id, productName, price, 
+      brandID, state, produceTime, 
+      productImg, `natural`)
+    values (#{id,jdbcType=INTEGER}, #{productName,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, 
+      #{brandID,jdbcType=INTEGER}, #{state,jdbcType=BIT}, #{produceTime,jdbcType=TIMESTAMP}, 
+      #{productImg,jdbcType=VARCHAR}, #{natural,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.shop.entity.Product">
+    insert into product
+    <trim prefix="(" suffix=")" suffixOverrides=","> 
+      <if test="productName != null">
+        productName,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="brandID != null">
+        brandID,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="produceTime != null">
+        produceTime,
+      </if>
+      <if test="productImg != null">
+        productImg,
+      </if>
+      <if test="natural != null">
+        `natural`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=","> 
+      <if test="productName != null">
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="brandID != null">
+        #{brandID,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=BIT},
+      </if>
+      <if test="produceTime != null">
+        #{produceTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="productImg != null">
+        #{productImg,jdbcType=VARCHAR},
+      </if>
+      <if test="natural != null">
+        #{natural,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.shop.entity.Product">
+    update product
+    <set>
+      <if test="productName != null">
+        productName = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="brandID != null">
+        brandID = #{brandID,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=BIT},
+      </if>
+      <if test="produceTime != null">
+        produceTime = #{produceTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="productImg != null">
+        productImg = #{productImg,jdbcType=VARCHAR},
+      </if>
+      <if test="natural != null">
+        `natural` = #{natural,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.shop.entity.Product">
+    update product
+    set productName = #{productName,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      brandID = #{brandID,jdbcType=INTEGER},
+      state = #{state,jdbcType=BIT},
+      produceTime = #{produceTime,jdbcType=TIMESTAMP},
+      productImg = #{productImg,jdbcType=VARCHAR},
+      natural = #{natural,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update> 
+</mapper>

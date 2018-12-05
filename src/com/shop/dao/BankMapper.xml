@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shop.dao.BankMapper">
+  <resultMap id="BaseResultMap" type="com.shop.entity.Bank">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="customerName" jdbcType="CHAR" property="customerName" />
+    <result column="currentMoney" jdbcType="DECIMAL" property="currentMoney" />
+    <result column="produceTime" jdbcType="TIMESTAMP" property="produceTime" />
+    <result column="cardID" jdbcType="CHAR" property="cardID" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, customerName, currentMoney, produceTime, cardID
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bank
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getaddBank" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bank
+  </select>
+  
+  <select id="getBankSum" resultType="int"> 
+    SELECT COUNT(1) FROM Bank
+  </select>
+  
+  <select id="getaddBanks" resultMap="BaseResultMap">
+    SELECT * FROM Bank 
+     LIMIT #{stratIndex},#{pageSize};
+  </select>
+  
+  <select id="getbankbyid" resultMap="BaseResultMap">
+     SELECT * FROM Bank
+     <where> 
+       id=#{id}
+     </where>
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bank
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 加钱  -->
+  <update id="addMoney" parameterType="com.shop.entity.Bank">
+    update bank 
+    set currentMoney = currentMoney + #{currentMoney}
+    where id = #{id}
+  </update>
+  
+  <!-- 减钱 -->
+  <update id="reduceMoney" parameterType="com.shop.entity.Bank">
+    update bank 
+    set currentMoney = currentMoney - #{currentMoney}
+    where id = #{formid}
+  </update>
+  
+  <insert id="insert" parameterType="com.shop.entity.Bank">
+    insert into bank (id, customerName, currentMoney, 
+      produceTime, cardID)
+    values (#{id,jdbcType=INTEGER}, #{customerName,jdbcType=CHAR}, #{currentMoney,jdbcType=DECIMAL}, 
+      #{produceTime,jdbcType=TIMESTAMP}, #{cardID,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.shop.entity.Bank">
+    insert into bank
+    <trim prefix="(" suffix=")" suffixOverrides=","> 
+      <if test="customerName != null">
+        customerName,
+      </if>
+      <if test="currentMoney != null">
+        currentMoney,
+      </if>
+      <if test="produceTime != null">
+        produceTime,
+      </if>
+      <if test="cardID != null">
+        cardID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=","> 
+      <if test="customerName != null">
+        #{customerName,jdbcType=CHAR},
+      </if>
+      <if test="currentMoney != null">
+        #{currentMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="produceTime != null">
+        #{produceTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cardID != null">
+        #{cardID,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.shop.entity.Bank">
+    update bank
+    <set>
+      <if test="customerName != null">
+        customerName = #{customerName,jdbcType=CHAR},
+      </if>
+      <if test="currentMoney != null">
+        currentMoney = #{currentMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="produceTime != null">
+        produceTime = #{produceTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cardID != null">
+        cardID = #{cardID,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.shop.entity.Bank">
+    update bank
+    set customerName = #{customerName,jdbcType=CHAR},
+      currentMoney = #{currentMoney,jdbcType=DECIMAL},
+      produceTime = #{produceTime,jdbcType=TIMESTAMP},
+      cardID = #{cardID,jdbcType=CHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
