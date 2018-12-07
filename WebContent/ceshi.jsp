@@ -17,7 +17,7 @@ $(function(){
            $('#scroll').click(function(){
            $("html,body").animate({scrollTop:0},200);
         });
-          $("#scroll").mouseenter(function(){  //鼠标移入
+          $("#scroll").mouseenter(function(){  //鼠标移入============
         	  $("#scroll").text("回到顶部");
           });
           $("#scroll").mouseleave(function(){  //鼠标移出
