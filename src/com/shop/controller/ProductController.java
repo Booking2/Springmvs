@@ -190,4 +190,47 @@ public class ProductController {
 		  productSerivce.updateProduct(product);
 		  return "redirect:getProductList";
 	  }
+	  
+	  
+	  
+	  
+	  @RequestMapping("/imgsd")
+	   public String imgsd(Product product,@RequestParam(value ="imgs", required = false) 	MultipartFile imgs,Model model,
+			  HttpServletResponse response,HttpServletRequest request,Integer currentPageNo,RedirectAttributes urbutes) {
+		  String viewName="forward:reviewProduct"; //转发 
+		  String fileName = null;
+		  if (!imgs.isEmpty()) {
+				String path = request.getSession().getServletContext().getRealPath("statics"+File.separator+"upload"); 			
+				String oldFileName = imgs.getOriginalFilename();//获取文件的原名字			
+				String prefix=FilenameUtils.getExtension(oldFileName);//原文件后缀     
+				int filesize = 5000000;
+		        if(imgs.getSize() >  filesize){//上传大小不得超过 500k
+	            	request.setAttribute("uploadPicError", " * 上传大小不得超过 500k");
+	            	//超过大小不允许跳转，直接返回以前的视图页面
+		        	return viewName;
+	            }else if(prefix.equalsIgnoreCase("jpg") || prefix.equalsIgnoreCase("png") 
+	            		|| prefix.equalsIgnoreCase("gif")||prefix.equalsIgnoreCase("jpeg")){//上传图片格式不正确
+	            	fileName="head_"+System.currentTimeMillis()+RandomUtils.nextInt(1000000)+"."+prefix;
+	                File targetFile = new File(path, fileName);  
+	                if(!targetFile.exists()){  
+	                    targetFile.mkdirs();  
+	                }  
+	                //保存  
+	                try {  
+	                	imgs.transferTo(targetFile);  
+	                } catch (Exception e) {  
+	                    e.printStackTrace();  
+	                    request.setAttribute("uploadPicError", " * 上传失败！");
+	                    return viewName;
+	                }  
+	            }else{
+	            	request.setAttribute("uploadPicError", " * 上传图片格式不正确");
+	            	return viewName;
+	            }
+		        System.out.println(fileName);
+		        model.addAttribute("imgs", fileName);
+		  }
+		  return "msg";
+	  }
+		  
 }

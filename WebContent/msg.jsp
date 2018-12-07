@@ -8,7 +8,7 @@
 </head>
 <body>
 <script type="text/javascript">
-  alert("开户成功"); location.href ="getaddBanks";
+   ${imgs} 
 </script>
 </body>
 </html>
